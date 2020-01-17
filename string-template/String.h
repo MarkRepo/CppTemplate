@@ -4,6 +4,7 @@
 
 #ifndef CPPTEMPLATE_STRING_H
 #define CPPTEMPLATE_STRING_H
+#include <iostream>
 
 namespace wfq {
 
@@ -12,7 +13,7 @@ namespace wfq {
     public:
         String();
         explicit String(const C*);
-        String operator=(const string&);
+        String operator=(const String&);
         //...
         C& operator[](int n){return ptr[n];}
         String& operator+=(C c);
@@ -23,6 +24,18 @@ namespace wfq {
         C* ptr;
         C ch[short_max];
     };
+
+    template <typename C>
+    String<C>::String() :sz(0), ptr(ch){
+        std::cout<<"in String constructor" << std::endl;
+    }
+
+    template <typename C>
+    String<C>& String<C>::operator+=(C c) {
+        //todo
+        std::cout<<"in operatore+= c is " << c << std::endl;
+        return *this;
+    }
 
 }//namespace template
 #endif //CPPTEMPLATE_STRING_H
