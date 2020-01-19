@@ -3,4 +3,8 @@
 *.so
 *.la
 .idea/*
+bazel-bin
+bazel-out
+bazel-CppTemplate
+bazel-testlogs
 
