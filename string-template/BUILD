@@ -9,7 +9,7 @@ cc_library(
 
 cc_test(
     name = "string-test",
-    srcs = ["String.test.cc"],
+    srcs = ["String_test.cc"],
     copts = ["-Iexternal/gtest/include/",
 	     "-Iexternal/gtest",
 	    ],
