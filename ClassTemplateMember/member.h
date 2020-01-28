@@ -7,12 +7,15 @@
 
 #include <iostream>
 #include <typeinfo>
+#include "CommonTools/typeinfodemangle.h"
 
 namespace tpl {
 namespace member {
 
 using std::cout;
 using std::endl;
+using tpl::common::DeMangle;
+using tpl::common::DeMangleToCout;
 
 //0. 类模版成员的规则与普通类成员的规则是一样的。
 //1. 数据成员
@@ -139,7 +142,7 @@ void user(BadList2<int, MyAllocator>& lm, BadList2<int, YouAllocator>& ly){
     cout << "int user " << endl;
     fct<MyAllocator>(lm.begin(), lm.end());
     fct<YouAllocator>(ly.begin(), ly.end());
-    cout << typeid(lm.begin()).name() << endl;
+    cout << DeMangle(typeid(lm.begin()).name()) << endl;
 };
 
 // 考虑将Iterator移出类模版

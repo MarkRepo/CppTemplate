@@ -1,8 +1,6 @@
-
-
 cc_test(
-    name = "member-test",
-    srcs = ["member_test.cc","member.h"],
+    name = "functpl-test",
+    srcs = ["function_test.cc","function.h"],
     copts = ["-Iexternal/gtest",
              "-Iexternal/gtest/include",
              ],
