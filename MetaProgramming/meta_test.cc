@@ -18,3 +18,60 @@ TEST(MetaTest, Holder){
 TEST(MetaTest, GetUnsignedIntegerT){
     tpl::meta::GetUnsignedIntegerT_test();
 }
+
+TEST(MetaTest, PodCopyTest){
+    tpl::meta::pod_copy_test();
+}
+
+TEST(MetaTest, BigObjHolderTest){
+    tpl::meta::big_obj_holder_test();
+}
+
+TEST(MetaTest, MyConditionalTest){
+    int a = my_conditional_test<int>(10);
+    ASSERT_EQ(a, 100);
+    int b = my_conditional_test<std::string>(10);
+    ASSERT_EQ(b, 1000);
+}
+
+TEST(MetaTest, Select1){
+    Select1<0, char, int, long> a;
+    string char_type_str = DeMangle(typeid(a).name());
+    ASSERT_EQ(char_type_str, "char");
+    Select1<1, char, int, long> b;
+    string int_type_str = DeMangle(typeid(b).name());
+    ASSERT_EQ(int_type_str, "int");
+}
+
+TEST(MetaTest, Select){
+    Select<0, char, int, long, double> a;
+    string char_str = DeMangle(typeid(a).name());
+    ASSERT_EQ(char_str, "char");
+    cout << "char_str "<< char_str << endl;
+
+    Select<1, char, int, long, double> b;
+    string int_str = DeMangle(typeid(b).name());
+    ASSERT_EQ(int_str, "int");
+    cout << "int_str " << int_str << endl;
+
+    Select<2, char, int, long, double, char, int, double> c;
+    string long_str = DeMangle(typeid(c).name());
+    ASSERT_EQ(long_str, "long");
+    cout << "long_str " <<long_str << endl;
+}
+
+TEST(MetaTest, facTest){
+    constexpr int x5  = fac<5>();
+    ASSERT_EQ(x5, 120);
+
+    constexpr int y5 = Fac<5>::value;
+    ASSERT_EQ(y5, 120);
+}
+
+TEST(MetaTest, SmartPointer){
+    Smart_pointer<double> d{new double};
+    Smart_pointer<std::string> s{new string()};
+
+    //auto d0 = d->size();
+    auto s0 = s->size();
+}
