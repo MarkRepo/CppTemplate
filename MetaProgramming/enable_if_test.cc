@@ -9,6 +9,7 @@
 
 using std::string;
 using tpl::common::DeMangle;
+using namespace tpl::enable;
 
 template< std::size_t Len, class... Types >
 using Aligned_union = typename std::aligned_union<Len,Types...>::type;
