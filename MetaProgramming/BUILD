@@ -30,3 +30,14 @@ cc_test(
             "//CommonTools:typeinfodemangle",
             ],
 )
+
+cc_test(
+    name = "unit-test",
+    srcs = ["unit_test.cc","unit.h", "meta.h"],
+    copts = ["-Iexternal/gtest",
+             "-Iexternal/gtest/include",
+             ],
+    deps = ["@gtest//:main",
+            "//CommonTools:typeinfodemangle",
+            ],
+)
