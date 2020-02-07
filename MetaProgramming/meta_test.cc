@@ -75,3 +75,24 @@ TEST(MetaTest, SmartPointer){
     //auto d0 = d->size();
     auto s0 = s->size();
 }
+
+TEST(MetaTest, MyVector){
+    MyVector<int> v_i(10, 20);
+    string b{}; string e{};
+    MyVectorEnable<int> v_e(10,20);
+    MyVectorEnable<std::string> v_s(b, e);
+    MyVectorEnableArg<int> v_a(10, 20);
+    MyVectorEnableArg<std::string> v_a_s(b, e);
+}
+
+TEST(MetaTest, Has_f){
+    X<int> x_int;
+    X<double> x_double;
+    X<std::string> x_s;
+    int i = 5;
+    double d = 0.1;
+    string s{};
+    x_int.use_f(i);
+    x_double.use_f(d);
+    x_s.use_f(s);
+}

@@ -409,6 +409,102 @@ public:
     int* get(){return pt_;}
 };
 
+//Enable_if技术用于模版函数的实例
+template<typename T>
+class MyVector{
+public:
+    MyVector(size_t n, const T& val){
+        cout << "MyVector use size_t and val version" << endl;
+    }
+
+    //MyVector<int> v(10,20)， 会使用该版本， 因为10到size_t需要类型转换
+    template <typename Iter>
+    MyVector(Iter b, Iter e){
+        cout << "MyVector use Iter version" << endl;
+    }
+};
+
+//Enable_if 用作默认模版实参
+template <typename T>
+class MyVectorEnable{
+public:
+    //MyVectorEnable<int> v(10,20)会使用该版本
+    MyVectorEnable(size_t n, const T& val){
+        cout << "MyVectorEnable use size_t and val version" << endl;
+    }
+
+    template <typename Iter, typename = Enable_if<Is_class<Iter>(), Iter> >
+    MyVectorEnable(Iter b, Iter e){
+        cout << "MyVectorEnable use Iter version" << endl;
+    }
+};
+
+//Enable_if用作构造函数的实参类型
+template <typename T>
+class MyVectorEnableArg{
+public:
+    //MyVectorEnableArg<int> v(10,20)使用该版本
+    MyVectorEnableArg(size_t n, const T& val){
+        cout << "MyVectorEnableArg use size_t and val version" << endl;
+    }
+
+    template <typename Iter>
+    MyVectorEnableArg(Enable_if<Is_class<Iter>(), Iter> b, Iter e){
+        cout << "MyVectorEnableArg use Iter version" << endl;
+    }
+};
+
+//问题: 若x的类型为X， 是否能调用f(x)?
+//Has_f的实现:
+struct substitution_failure{}; //表示声明失败
+
+//std::true_type::value == true;
+//std::false_type::value == false;
+template <typename T>
+struct substitution_succeeded : std::true_type{};
+
+template <>
+struct substitution_succeeded<substitution_failure> : std::false_type{};
+
+//对所有类型都提供函数f，用于Has_f的测试
+template <typename T>
+void f(T){
+    cout << "enter func f when Has_f test , T is " << DeMangle(typeid(T).name()) << endl;
+}
+
+//f(x)的返回类型不是substitution_failure时，下面的技术才能生效
+template <typename T>
+struct get_f_result{
+private:
+    //decltype不会对其运算对象求值
+    template <typename X>
+    static auto check(X const& x)-> decltype(f(x));// 可以调用f(x)时，check的声明才能编译通过, check的返回类型与f(x)相同
+    static substitution_failure check(...); //不能调用f(x)时返回substitution_failure
+
+public:
+    using type = decltype(check(std::declval<T>()));
+};
+
+//如果get_f_result<T>生成一个恰当的类型（调用f的返回类型）， 则has_f::value 为true；
+//若get_f_result<T> 编译失败，他会返回substitution_failure,因而has_f::value为false
+template <typename T>
+struct has_f : substitution_succeeded<typename get_f_result<T>::type>{};
+
+//掌握了Has_f定义所使用的技术后，就可以为能想到的任何操作或成员foo定义Has_foo了
+template <typename T>
+constexpr bool Has_f(){
+    return has_f<T>::value;
+}
+
+//使用Has_f, X<T>具有成员use_f()当且仅当对类型为T的t值可以调用f(t)
+template <typename T>
+class X{
+public:
+    Enable_if <Has_f<T>()> use_f(const T& t){
+        f(t);
+    }
+};
+
 }// namespace meta
 }// namespace tpl
 #endif //CPPTEMPLATE_META_H

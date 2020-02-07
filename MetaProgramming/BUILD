@@ -19,3 +19,14 @@ cc_test(
             "//CommonTools:typeinfodemangle",
             ],
 )
+
+cc_test(
+    name = "variadic-test",
+    srcs = ["variadic_tpl_test.cc","variadic_tpl.h", "meta.h"],
+    copts = ["-Iexternal/gtest",
+             "-Iexternal/gtest/include",
+             ],
+    deps = ["@gtest//:main",
+            "//CommonTools:typeinfodemangle",
+            ],
+)

@@ -109,7 +109,7 @@ void destroy(T *t) // 注意，不修改函数签名
     }
 }
 
-//typename = Enable_if<!std::is_class<T>::value, int>, 其实是引入了一个匿名模版类型参数
+//typename = Enable_if<!std::is_class<T>::value, int>, 其实是引入了一个匿名模版类型参数,由于其不能被推断（函数模版中），所以默认值会被计算，因此Enable_if生效
 //所以如果定义如下的模版，则会报重定义错误
 /*
 template <typename T1, typename T2>
