@@ -48,6 +48,7 @@ template <typename U1, typename U2>
 using Unit_minus = typename Uminus<U1, U2>::type;
 
 //一个Quatity是一个关联Unit的值
+//constexpr 构造函数使其成为一个字面值类型，这是字面值常量运算符的返回类型所要求的
 template<typename U = double>
 struct Quantity{
     long double val;
