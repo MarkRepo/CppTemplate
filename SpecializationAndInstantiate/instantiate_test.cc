@@ -30,3 +30,10 @@ TEST(InstantiateTest, hhh2){
 TEST(InstantiateTest, fff3){
     fff3();
 }
+
+TEST(InstantiateTest, bh){
+    BX<BB> bxb;
+    B1X<B1B> b1xb1;
+    bh(bxb);
+    b1h(b1xb1);
+}

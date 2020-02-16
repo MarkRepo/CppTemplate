@@ -223,6 +223,118 @@ void fff4(){
 }
 
 //多实例化点
+//如果选择不同的实例化点可能导致两种不同的含义，则程序是非法的
+namespace N {
+    class X{};
+    int ng(X,int){cout << "int version"<<endl;}
+}
+
+template <typename T>
+int m_ff(T t, double d){
+    ng(t, d);
+    return 1;
+}
+
+auto X1 = m_ff(N::X{}, 1.1); //使用ng(X,double)
+
+namespace N{
+    int ng(X, double){cout << "double version" << endl;}
+}
+
+auto X2 = m_ff(N::X{}, 2.2);//使用ng(X,double)
+
+//实参依赖查找机制：当函数被调用时，即使其声明不在当前作用域中，只要他是在某个实参所在的名字空间中声明的，编译器就能找到它
+//编译器完成依赖性名字的绑定：
+//1。模版定义点所处作用域的名字
+//2。依赖性调用的一个实参的名字空间中的名字
+
+namespace M{
+
+    class A{};
+    char df(A){cout << "A type version" << endl;}
+}
+
+char df(int){cout << "int type version" << endl;}
+
+template <typename T>
+char dg(T t){
+    return df(t);
+}
+
+char df(double){cout << "double type version" << endl;}
+
+char c1 = dg(M::A{});
+char c2 = dg(2);
+char c3 = dg(2.1);// df(int）被调用，df(double)不在作用域
+
+
+//来自基类的名字
+void bg(int) {cout << "::bg(int) version" << endl;}
+
+struct BB{
+    void bg(int){cout << "BB::bg int version"<<endl;}
+    void bh(int){cout << "BB::bh int version"<<endl;}
+};
+
+template <typename T>
+class BX : public T{
+public:
+    void bf(){
+        bg(2);//调用::bg(int),因为bg(2)不依赖模版参数，会在定义点绑定
+    }
+};
+
+void bh(BX<BB> x){
+    x.bf();
+}
+
+//将依赖性名字纳入考虑的方式：
+//1 用依赖性类型限定，如T::g
+//2 声明一个名字指向此类的一个对象（this->g）
+//3 用using声明将名字引入作用域
+
+void b1g(int){cout << "::b1g version" << endl;}
+void b1g2(int){cout << "::b1g2 version" << endl;}
+
+struct B1B{
+
+    using Type = int;
+    void b1g(int){cout << "B1B::b1g version" << endl;}
+    void b1g2(int){cout << "B1B::b1g2 version" << endl;}
+};
+
+template <typename T>
+class B1X : public T{
+public:
+    typename T::Type m;
+    using T::b1g2;
+
+    void b1f(){
+        this->b1g(2); //调用T::B1g
+        b1g(2); //调用::B1g(int)
+        b1g2(2);//调用T::B1g2
+    }
+};
+
+void b1h(B1X<B1B> x){
+    x.b1f();
+}
+
+template <typename T>
+class Matrix_base{
+    int size()const {return sz;}
+
+protected:
+    int sz;
+    T* elem;
+};
+
+template <typename T, int N>
+class Matrix : public Matrix_base<T>{
+    T* data(){
+        return this->elem;//类层次被模版化，需要显示限定对模版的依赖性基类成员的访问
+    }
+};
 
 }   //namespace instantiate
 }   //namespace tpl
