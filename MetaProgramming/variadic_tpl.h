@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <type_traits>
+#include <fstream>
 
 using std::cout;
 using std::endl;
@@ -370,6 +371,44 @@ private:
 template <typename T>
 const_test<T> make_const_test(T&& t){
     return const_test<T>{t};
+}
+
+
+class MFB{
+public:
+    void echo(std::string name, int age, int age2){
+        cout << "name is " << name <<", age is "<< age << "age2 is" <<age2<< endl;
+    }
+
+    void echo(std::string name , double core){
+        cout << "name is " << name << ", core is " << core << endl;
+    }
+};
+
+class MF:public MFB{
+public:
+    MF(double core):core_{core}{}
+    double core_;
+};
+
+template <typename T, typename TB, typename... Args , typename... Args2>
+void MF_test(T* obj, void(TB::*method)(Args2...), Args... args){
+    int age2 = 500;
+    (obj->*method)(std::forward<Args>(args)..., age2);
+}
+
+template <typename... Args>
+void MF_test2(Args... args, int a){
+cout << "MF_test2 " << a <<endl;
+}
+
+void fstream_test(char* filename){
+    string cmd = string("echo abcd > ") + filename;
+    std::system(cmd.data());
+    std::ifstream f(filename);
+    int port = -1;
+    f >> port;
+    cout << "read port is " << port << endl;
 }
 
 }// namespace variadic

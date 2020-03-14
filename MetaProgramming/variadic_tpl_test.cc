@@ -134,3 +134,19 @@ TEST(VariadicTest, print_tuple){
     std_tuple<int, char, double, string, bool, string> st{1, 'a', 1.1, string("aaa"), false, string("bbb")};
     cout << st << endl;
 }
+
+
+using echoType = void(MFB::*)(string, int, int);
+
+TEST(MFTest, echo){
+    MF mf(95.5);
+    string name = "markfqwu";
+    int a = 5;
+    echoType pEcho = &MF::echo;
+    MF_test(&mf, pEcho, name, 30);
+    MF_test2(30);
+}
+
+TEST(FstreamTest, fstream){
+    fstream_test("/tmp/logreplay_main_port");
+}
