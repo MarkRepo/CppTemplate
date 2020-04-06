@@ -166,7 +166,23 @@ class Conversion<T,T>{
 
 //7。 type_info的一个封装类, 参考loki库，https://github.com/MarkRepo/loki-0.1.7.git
 //8。 NullType, EmptyType,参考loki库，https://github.com/MarkRepo/loki-0.1.7.git
+//nulltype 是一个只有声明没有定义的类,通常用在有语法需求而无语义概念的地方
+class NullType;
+
+struct EmptyType{};
 //9。 TypeTraits,参考loki库，https://github.com/MarkRepo/loki-0.1.7.git
+
+//10 型别选择
+
+template <bool flags, typename T, typename U>
+struct Select{
+    using Result = T;
+};
+
+template<typename T, typename U>
+struct Select<false, T, U>{
+    using Result = U;
+};
 
 }//namespace tech
 }//namespace modern

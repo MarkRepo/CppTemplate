@@ -36,3 +36,11 @@ TEST(TechTest, Conversion){
     Conversion<char, char*>::exists << "  " <<
     Conversion<size_t, vector<int>>::exists << "  " << endl;
 }
+
+TEST(TechTest, supersub){
+    if(SUPERSUBCLASS(int, double)){
+        cout << "double is sub class of int" << endl;
+    }else{
+        cout << "double is not sub class of int " << endl;
+    }
+}
